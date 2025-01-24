@@ -19,6 +19,7 @@ class timer(object):
     def minu2sec(self, minutes):
         return int(minutes * 60)
     
+    
     def repeat_calc(self, total_time):
         return total_time // (self.work_time + self.rest_time)
     
