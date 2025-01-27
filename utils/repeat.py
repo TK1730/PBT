@@ -1,6 +1,6 @@
 class Repeat(object):
-    def __init__(self):
-        self.rep_limit = None
+    def __init__(self, hours):
+        self.rep_limit = hours * 2
         self.rep_now = 0
         self.flag_finish = False
 
