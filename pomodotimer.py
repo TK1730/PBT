@@ -1,26 +1,41 @@
 import utils.timer as timer
 import utils.repeat as repeat
 
-
-
 class PomodoroTimer(object):
     def __init__(self):
         # フェーズの状態
-        self.phase = {0: "start_menu",
-                      1: "work_meenu",
-                      2: "rest_menu",
-                      3: "finish_menu"}
-        # 現在のフェーズ
-        self.current_phase = 0
+        self.phase = 1
+        
+        # ウィンドウ
+        self.window_start = 1
+        self.window_working = 2
+        self.window_rest = 3
+        self.window_finish = 4
+
         # ポモドーロの時間設定
         self.time_work = timer.TimeWork(25)
         self.time_rest = timer.TimeRest(5)
 
-    def change_phase(self):
-        pass
-        
+        # 繰り返し
+        self.rep = None
+
+    def __call__(self, *args, **kwds):
+        while(self.phase):
+            if self.phase == 1:
+                pass
+            elif self.phase == 2:
+                pass
+            elif self.phase == 3:
+                pass
+            elif self.phas == 4:
+                pass
 
 
-    def change_window(self):
-        self.phase[self.current_phase]
-    
+    def start_phase(self):
+        print("input hours")
+        x = input()
+        print(type(x))
+
+if __name__ == '__main__':
+    pomo = PomodoroTimer()
+    pomo.start_phase()
