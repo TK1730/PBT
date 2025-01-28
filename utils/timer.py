@@ -1,3 +1,4 @@
+import time
 class Timer(object):
     def __init__(self, times):
         """
@@ -10,11 +11,14 @@ class Timer(object):
         #　秒
         self.seconds = self.Minute2Second(self.times)
 
+        self.minutes = 60
+
     def CountDown(self):
         """
             秒数を1秒ずつ減らす
         """
         self.seconds -= 1
+        time.sleep(1.0)
 
     def ResetTime(self):
         """
@@ -31,8 +35,19 @@ class Timer(object):
         Returns:
             int : 秒を返す
         """
-        sec = m * 60
+        sec = m * self.minutes
         return sec
+    
+    def Transfoemer(self):
+        """
+            秒を分と秒に変換
+        Args:
+            sec ( int ): second(秒)
+        """
+        m = self.seconds // self.minutes
+        s = self.seconds % self.minutes
+
+        return m, s
 
 
 class TimeWork(Timer):
