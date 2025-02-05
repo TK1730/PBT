@@ -9,21 +9,21 @@ class Timer(object):
         Args:
             times ( int ): minutes(分)
         """
-        self.time = time
-        self.seconds = self.Minute2Second(time)
+        self.set_time = time
+        self.currnet_time = self.Minute2Second(self.set_time)
 
     def CountDown(self):
         """
             秒数を1秒ずつ減らす
         """
-        self.seconds -= 1
+        self.currnet_time -= 1
         time.sleep(1.0)
 
     def ResetTime(self):
         """
             秒数を初期化
         """
-        self.seconds = self.Minute2Second(self.times)
+        self.currnet_time = self.Minute2Second(self.set_time)
 
     def Minute2Second(self, m):
         """
@@ -43,8 +43,8 @@ class Timer(object):
         Args:
             sec ( int ): second(秒)
         """
-        m = self.seconds // self.MINUTE
-        s = self.seconds % self.MINUTE
+        m = self.currnet_time // self.MINUTE
+        s = self.currnet_time % self.MINUTE
 
         return m, s
     
