@@ -160,7 +160,7 @@ class RestWindow(tk.Frame):
         super().__init__(master, bg="black")
         self.pomodoro_timer = pomodoro_timer
 
-        self.rest_methods = ["つむつむ","仮眠","休憩"]
+        self.rest_methods = ["仮眠","ストレッチ","水分補給","トイレ","散歩","軽いエクササイズ","遠くを見る","目を温める","好きな音楽を聞く","リラックスできるコンテンツを見る","日記やメモを書く","部屋の喚起","スナックタイム","飲み物などを準備する"]
         self.rest_way()
 
         # 休憩時のメッセージ表示
