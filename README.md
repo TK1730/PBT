@@ -1,4 +1,7 @@
 # PBT
+## デザイン
+[Figmaデザイン・設計はこちら](https://www.figma.com/board/BlERXhH1cMM7M4GTrj2DCA/PBT?node-id=0-1&t=u3OLjuJCwDc97vvl-1)
+
 # 集中力維持アプリ
 
 ## プロジェクト概要
