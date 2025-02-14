@@ -16,8 +16,8 @@ class PomodoroWindow(tk.Tk):
         super().__init__()
 
         self.title("Pomodoro Blackout Timer")
-        self.geometry("500x500")
-        # self.attributes("-fullscreen", True)
+        # self.geometry("500x500")
+        self.state("zoomed")
         self.configure(bg="white")
 
         self.pomodoro_timer = pomodoro_timer
@@ -36,12 +36,15 @@ class PomodoroWindow(tk.Tk):
         """
         作業ウィンドウ表示
         """
+        self.iconify()
         self.change_window(WorkingWindow)
 
     def show_rest_window(self):
         """
         休憩ウィンドウ表示
         """
+        self.deiconify()
+        self.attributes("-fullscreen", True)
         self.configure(bg="black")
         self.change_window(RestWindow)
 
@@ -162,6 +165,8 @@ class WorkingWindow(tk.Frame):
         self.left_time_label.config(text=f"{self.minutes:2}:{self.sec:2}")
 
         if self.pomodoro_timer.time_work.currnet_time == 0:
+            self.pomodoro_timer.time_work.ResetTime()
+            self.pomodoro_timer.rep.repeat_count()
             self.master.show_rest_window()
         else:
             delay = self.get_elapsed_time(self.start_time)
@@ -216,6 +221,7 @@ class RestWindow(tk.Frame):
         self.left_time_label.config(text=f"{self.minutes:2}:{self.sec:2}")
 
         if self.pomodoro_timer.time_rest.currnet_time == 0:
+            self.pomodoro_timer.time_rest.ResetTime()
             if self.pomodoro_timer.rep.flag_finish:
                 self.master.show_finish_window()
             else:
