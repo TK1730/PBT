@@ -1,4 +1,5 @@
 import tkinter as tk
+import time
 import random
 from pstats import Stats
 from tkinter import messagebox
@@ -15,8 +16,8 @@ class PomodoroWindow(tk.Tk):
         super().__init__()
 
         self.title("Pomodoro Blackout Timer")
-        # self.geometry("500x500")
-        self.attributes("-fullscreen", True)
+        self.geometry("500x500")
+        # self.attributes("-fullscreen", True)
         self.configure(bg="white")
 
         self.pomodoro_timer = pomodoro_timer
@@ -73,24 +74,34 @@ class StartWindow(tk.Frame):
         super().__init__(master, bg="white")
         self.pomodoro_timer = pomodoro_timer
 
+        # ウィンドウ表示用変数
         self.title = "ポモドーロタイマー"
         self.subtitle = "限界を超えろ!"
         self.message = "作業時間を決めてね"
         self.start_button_text = "Start"
 
-        title_label = tk.Label(self, text=self.title, font=("Arial", 130, "bold"), fg="blue", bg="white")
+        # フォントサイズ
+        font_tile = 130
+        font_subtitle = 90
+        font_user_input = 60
+
+        # タイトル 
+        title_label = tk.Label(self, text=self.title, font=("Arial", font_tile, "bold"), fg="blue", bg="white")
         title_label.pack(pady=(100, 10))
 
-        subtitle_label = tk.Label(self, text=self.subtitle, font=("Arial", 90, "bold"), bg="white")
+        # サブタイトル
+        subtitle_label = tk.Label(self, text=self.subtitle, font=("Arial", font_subtitle, "bold"), bg="white")
         subtitle_label.pack(pady=(10, 160))
 
-        self.user_input_box = tk.Entry(self, font=("Arial", 60, "bold"), fg="grey", justify="center", highlightthickness=5, highlightcolor="orange")
+        # ユーザー入力ボックス
+        self.user_input_box = tk.Entry(self, font=("Arial", font_user_input, "bold"), fg="grey", justify="center", highlightthickness=5, highlightcolor="orange")
         self.user_input_box.pack(pady=10)
         self.user_input_box.insert(0, self.message)
         self.user_input_box.bind("<FocusIn>", self.clear_placeholder)
         self.user_input_box.bind("<FocusOut>", self.add_placeholder)
 
-        self.start_button = tk.Button(self, text=self.start_button_text, font=("Arial", 60, "bold"), command=self.StartTimer, fg='white', bg='red')
+        # スタートボタン
+        self.start_button = tk.Button(self, text=self.start_button_text, font=("Arial", font_user_input, "bold"), command=self.StartTimer, fg='white', bg='red')
         self.start_button.pack(pady=10)
 
     def clear_placeholder(self, event):
@@ -123,17 +134,20 @@ class WorkingWindow(tk.Frame):
         super().__init__(master,bg="white")
         self.pomodoro_timer = pomodoro_timer
 
+        # ウィンドウ表示用変数
         self.message = "自分を超えろ！"
+
+        # フォントサイズ用変数
         message_label = tk.Label(self, text=self.message, font=("Arial", 90),bg="white")
-        message_label.pack(pady=(80,10))
+        message_label.pack(pady=(80,10), expand=True, fill=tk.BOTH)
 
         # 作業時間を表示
         self.minutes, self.sec = self.pomodoro_timer.time_work.Transform()
-        self.left_time_label = tk.Label(self, text=f"{self.minutes:2}:{self.sec:2}", font=("Arial", 300, 'bold'), highlightthickness=20, highlightcolor="orange", highlightbackground="orange", fg="orange",bg="white", padx=200, pady=50)
-        self.left_time_label.pack(pady=50)
+        self.left_time_label = tk.Label(self, text=f"{self.minutes:2}:{self.sec:2}", font=("Arial", 200, 'bold'), highlightthickness=20, highlightcolor="orange", highlightbackground="orange", fg="orange",bg="white", padx=200, pady=50)
+        self.left_time_label.pack(pady=50, expand=True, fill=tk.BOTH)
 
         self.left_lim_label = tk.Label(self, text=f"{self.pomodoro_timer.rep.rep_now} / {self.pomodoro_timer.rep.rep_limit}", font=("Arial", 90, 'bold'),bg="white")
-        self.left_lim_label.pack()
+        self.left_lim_label.pack(expand=True, fill=tk.BOTH)
 
         # 作業時間の更新
         self.update_timer()
@@ -142,15 +156,26 @@ class WorkingWindow(tk.Frame):
         """
             タイマー更新
         """
+        self.start_time = time.time()
         self.pomodoro_timer.time_work.CountDown()
         self.minutes, self.sec = self.pomodoro_timer.time_work.Transform()
         self.left_time_label.config(text=f"{self.minutes:2}:{self.sec:2}")
-        self.left_lim_label.config(text=f"リミット：{self.pomodoro_timer.rep.rep_now} / {self.pomodoro_timer.rep.rep_limit}")
 
         if self.pomodoro_timer.time_work.currnet_time == 0:
             self.master.show_rest_window()
         else:
-            self.after(1000, self.update_timer)
+            delay = self.get_elapsed_time(self.start_time)
+            self.after(delay, self.update_timer)
+        
+
+    def get_elapsed_time(self, start_time):
+        """
+            1秒との差を取得
+        """
+        one_sec = 1000
+        elapsed_time = one_sec - int(time.time() - start_time) * one_sec
+        delay = max(0, int(elapsed_time))
+        return delay
 
 class RestWindow(tk.Frame):
     def __init__(self, master, pomodoro_timer: PomodoroTimer):
@@ -185,6 +210,7 @@ class RestWindow(tk.Frame):
         """
         タイマー更新
         """
+        self.start_time = time.time()
         self.pomodoro_timer.time_rest.CountDown()
         self.minutes, self.sec = self.pomodoro_timer.time_rest.Transform()
         self.left_time_label.config(text=f"{self.minutes:2}:{self.sec:2}")
@@ -195,7 +221,17 @@ class RestWindow(tk.Frame):
             else:
                 self.master.show_working_window()
         else:
-            self.after(1000, self.update_timer)
+            delay = self.get_elapsed_time(self.start_time)
+            self.after(delay, self.update_timer)
+
+    def get_elapsed_time(self, start_time):
+        """
+            1秒との差を取得
+        """
+        one_sec = 1000
+        elapsed_time = one_sec - int(time.time() - start_time) * one_sec
+        delay = max(0, int(elapsed_time))
+        return delay
 
 class FinishWindow(tk.Frame):
     def __init__(self, master, pomodoro_timer: PomodoroTimer):

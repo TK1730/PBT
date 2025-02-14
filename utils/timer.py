@@ -1,4 +1,3 @@
-import time
 class Timer(object):
     total_time = 0  # クラス変数として総作業時間を定義（全インスタンスで共通）
     MINUTE = 60
@@ -17,7 +16,6 @@ class Timer(object):
             秒数を1秒ずつ減らす
         """
         self.currnet_time -= 1
-        time.sleep(1.0)
 
     def ResetTime(self):
         """
