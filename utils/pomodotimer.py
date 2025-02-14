@@ -6,8 +6,8 @@ import time
 class PomodoroTimer(object):
     def __init__(self):
         # ポモドーロの時間設定
-        self.time_work = timer.TimeWork(25)
-        self.time_rest = timer.TimeRest(5)
+        self.time_work = timer.TimeWork(1)
+        self.time_rest = timer.TimeRest(1)
 
         # 繰り返し
         self.rep = None

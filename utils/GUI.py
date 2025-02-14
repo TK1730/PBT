@@ -55,6 +55,7 @@ class PomodoroWindow(tk.Tk):
         終了ウィンドウ表示
         """
         self.attributes("-fullscreen", False)
+        self.deiconify()
         self.change_window(FinishWindow)
 
     def change_window(self, window):
@@ -197,7 +198,7 @@ class RestWindow(tk.Frame):
         self.rest_way()
 
         # 休憩時のメッセージ表示
-        self.message_label = tk.Label(self, text=f"休憩方法 : {self.chosen_method}", font=("Arial", 30), bg="black", fg="white")
+        self.message_label = tk.Label(self, text=f"休憩方法 : {self.chosen_method}", font=("Arial", 30, 'bold'), bg="black", fg="white")
         self.message_label.pack(pady=(80,10), expand=True, fill="both")
 
         # 休憩時間を表示
@@ -225,7 +226,7 @@ class RestWindow(tk.Frame):
 
         if self.pomodoro_timer.time_rest.currnet_time == 0:
             self.pomodoro_timer.time_rest.ResetTime()
-            if self.pomodoro_timer.rep.flag_finish:
+            if self.pomodoro_timer.rep.completion_judg():
                 self.master.show_finish_window()
             else:
                 self.master.show_working_window()

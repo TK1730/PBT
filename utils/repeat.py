@@ -16,6 +16,8 @@ class Repeat(object):
         """
         if self.rep_limit == self.rep_now:
             self.flag_finish = True
+        
+        return self.flag_finish
 
 
 if __name__ == '__main__':
