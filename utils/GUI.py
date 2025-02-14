@@ -36,6 +36,7 @@ class PomodoroWindow(tk.Tk):
         """
         作業ウィンドウ表示
         """
+        self.attributes("-fullscreen", False)
         self.iconify()
         self.change_window(WorkingWindow)
 
@@ -43,8 +44,9 @@ class PomodoroWindow(tk.Tk):
         """
         休憩ウィンドウ表示
         """
-        self.deiconify()
         self.attributes("-fullscreen", True)
+        self.attributes("-topmost", True)
+        self.deiconify()
         self.configure(bg="black")
         self.change_window(RestWindow)
 
@@ -52,6 +54,7 @@ class PomodoroWindow(tk.Tk):
         """
         終了ウィンドウ表示
         """
+        self.attributes("-fullscreen", False)
         self.change_window(FinishWindow)
 
     def change_window(self, window):
@@ -146,7 +149,7 @@ class WorkingWindow(tk.Frame):
 
         # 作業時間を表示
         self.minutes, self.sec = self.pomodoro_timer.time_work.Transform()
-        self.left_time_label = tk.Label(self, text=f"{self.minutes:2}:{self.sec:2}", font=("Arial", 200, 'bold'), highlightthickness=20, highlightcolor="orange", highlightbackground="orange", fg="orange",bg="white", padx=200, pady=50)
+        self.left_time_label = tk.Label(self, text=f"{self.minutes:02}:{self.sec:02}", font=("Arial", 200, 'bold'), highlightthickness=20, highlightcolor="orange", highlightbackground="orange", fg="orange",bg="white", padx=200, pady=50)
         self.left_time_label.pack(pady=50, expand=True, fill=tk.BOTH)
 
         self.left_lim_label = tk.Label(self, text=f"{self.pomodoro_timer.rep.rep_now} / {self.pomodoro_timer.rep.rep_limit}", font=("Arial", 90, 'bold'),bg="white")
@@ -162,7 +165,7 @@ class WorkingWindow(tk.Frame):
         self.start_time = time.time()
         self.pomodoro_timer.time_work.CountDown()
         self.minutes, self.sec = self.pomodoro_timer.time_work.Transform()
-        self.left_time_label.config(text=f"{self.minutes:2}:{self.sec:2}")
+        self.left_time_label.config(text=f"{self.minutes:02}:{self.sec:02}")
 
         if self.pomodoro_timer.time_work.currnet_time == 0:
             self.pomodoro_timer.time_work.ResetTime()
@@ -194,7 +197,7 @@ class RestWindow(tk.Frame):
         self.rest_way()
 
         # 休憩時のメッセージ表示
-        self.message_label = tk.Label(self, text=f"休憩方法 : {self.chosen_method}", font=("Arial", 90), bg="black", fg="white")
+        self.message_label = tk.Label(self, text=f"休憩方法 : {self.chosen_method}", font=("Arial", 30), bg="black", fg="white")
         self.message_label.pack(pady=(80,10), expand=True, fill="both")
 
         # 休憩時間を表示
@@ -218,7 +221,7 @@ class RestWindow(tk.Frame):
         self.start_time = time.time()
         self.pomodoro_timer.time_rest.CountDown()
         self.minutes, self.sec = self.pomodoro_timer.time_rest.Transform()
-        self.left_time_label.config(text=f"{self.minutes:2}:{self.sec:2}")
+        self.left_time_label.config(text=f"{self.minutes:02}:{self.sec:02}")
 
         if self.pomodoro_timer.time_rest.currnet_time == 0:
             self.pomodoro_timer.time_rest.ResetTime()
