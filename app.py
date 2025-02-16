@@ -1,7 +1,7 @@
 from utils import GUI, pomodotimer
 
 def main():
-    pomo = pomodotimer.PomodoroTimer(1, 1)
+    pomo = pomodotimer.PomodoroTimer()
     app = GUI.PomodoroWindow(pomo)
     app.mainloop()
 
