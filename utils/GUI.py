@@ -56,6 +56,8 @@ class PomodoroWindow(tk.Tk):
         """
         self.attributes("-fullscreen", False)
         self.deiconify()
+        self.state("zoomed")
+        self.configure(bg="white")
         self.change_window(FinishWindow)
 
     def change_window(self, window):
@@ -108,7 +110,7 @@ class StartWindow(tk.Frame):
         self.user_input_box.bind("<FocusOut>", self.add_placeholder)
 
         # スタートボタン
-        self.start_button = tk.Button(self, text=self.start_button_text, font=("Arial", font_user_input, "bold"), command=self.StartTimer, fg='white', bg='red')
+        self.start_button = tk.Button(self, text=self.start_button_text, font=("Arial", font_user_input, "bold"), command=self.starttimer, fg='white', bg='red')
         self.start_button.pack(pady=10)
 
     def clear_placeholder(self, event):
@@ -127,7 +129,7 @@ class StartWindow(tk.Frame):
             self.user_input_box.insert(0, self.message)
             self.user_input_box.config(fg="grey")
 
-    def StartTimer(self):
+    def starttimer(self):
         # Timerクラスに総作業時間を代入
         self.pomodoro_timer.input_repeat(int(self.user_input_box.get()))
         self.master.show_working_window()
@@ -144,15 +146,20 @@ class WorkingWindow(tk.Frame):
         # ウィンドウ表示用変数
         self.message = "自分を超えろ！"
 
-        # フォントサイズ用変数
-        message_label = tk.Label(self, text=self.message, font=("Arial", 90),bg="white")
+        # フォントサイズ
+        font_message = 90
+        font_left_time_label = 200
+
+        message_label = tk.Label(self, text=self.message, font=("Arial",  font_message),bg="white")
         message_label.pack(pady=(80,10), expand=True, fill=tk.BOTH)
 
         # 作業時間を表示
         self.minutes, self.sec = self.pomodoro_timer.time_work.Transform()
-        self.left_time_label = tk.Label(self, text=f"{self.minutes:02}:{self.sec:02}", font=("Arial", 200, 'bold'), highlightthickness=20, highlightcolor="orange", highlightbackground="orange", fg="orange",bg="white", padx=200, pady=50)
+        self.left_time_label = tk.Label(self, text=f"{self.minutes:02}:{self.sec:02}", font=("Arial", font_left_time_label, 'bold'),
+                                         highlightthickness=20, highlightcolor="orange", highlightbackground="orange", fg="orange",bg="white", padx=200, pady=50)
         self.left_time_label.pack(pady=50, expand=True, fill=tk.BOTH)
 
+        # 作業回数を表示
         self.left_lim_label = tk.Label(self, text=f"{self.pomodoro_timer.rep.rep_now} / {self.pomodoro_timer.rep.rep_limit}", font=("Arial", 90, 'bold'),bg="white")
         self.left_lim_label.pack(expand=True, fill=tk.BOTH)
 
@@ -194,16 +201,21 @@ class RestWindow(tk.Frame):
         super().__init__(master, bg="black")
         self.pomodoro_timer = pomodoro_timer
 
+        # 休憩方法
         self.rest_methods = ["仮眠","ストレッチ","水分補給","トイレ","散歩","軽いエクササイズ","遠くを見る","目を温める","好きな音楽を聞く","リラックスできるコンテンツを見る","日記やメモを書く","部屋の喚起","スナックタイム","飲み物などを準備する"]
         self.rest_way()
 
+        # フォントサイズ
+        font_message_label = 30
+        font_left_time_label = 300
+
         # 休憩時のメッセージ表示
-        self.message_label = tk.Label(self, text=f"休憩方法 : {self.chosen_method}", font=("Arial", 30, 'bold'), bg="black", fg="white")
+        self.message_label = tk.Label(self, text=f"休憩方法 : {self.chosen_method}", font=("Arial", font_message_label, 'bold'), bg="black", fg="white")
         self.message_label.pack(pady=(80,10), expand=True, fill="both")
 
         # 休憩時間を表示
         self.minutes, self.sec = self.pomodoro_timer.time_rest.Transform()
-        self.left_time_label = tk.Label(self, text=f"{self.minutes:2} : {self.sec:2}", font=("Arial", 300, 'bold'), highlightthickness=20, highlightcolor="white", highlightbackground="white", fg="white",bg="black", padx=200, pady=50)
+        self.left_time_label = tk.Label(self, text=f"{self.minutes:2} : {self.sec:2}", font=("Arial", font_left_time_label, 'bold'), highlightthickness=20, highlightcolor="white", highlightbackground="white", fg="white",bg="black", padx=200, pady=50)
         self.left_time_label.pack(pady=50, expand=True, fill="both")
 
         # 休憩時間の更新
@@ -251,16 +263,37 @@ class FinishWindow(tk.Frame):
         super().__init__(master, bg="white")
         self.pomo_timer = pomodoro_timer
 
+        # ウィンドウ表示用
         self.title = "お疲れさまでした"
         self.subtitle = "水分補給してゆっくり休みましょう"
+        self.restart_button_text = "まだまだやるぞ！"
 
+        # フォントサイズ
+        font_title = 90
+        font_subtitle = 50
+        font_restart_button = 30
+
+        # タイトル
         self.title_label = None
         self.subtitle_label = None
-        self.title_label = tk.Label(self, text=self.title, font=("Arial", 150, 'bold'), bg="white")
+        self.title_label = tk.Label(self, text=self.title, font=("Arial", font_title, 'bold'), bg="white")
         self.title_label.pack(pady=(300, 100))
 
-        self.subtitle_label = tk.Label(self, text=self.subtitle, font=("Arial", 50, 'bold'), bg="white")
+        # サブタイトル
+        self.subtitle_label = tk.Label(self, text=self.subtitle, font=("Arial", font_subtitle, 'bold'), bg="white")
         self.subtitle_label.pack(pady=5)
+
+        # スタート画面に戻る
+        self.restart_button = tk.Button(self, text=self.restart_button_text, font=("Arial", font_restart_button, 'bold'), command=self.restart, fg='white', bg='red')
+        self.restart_button.pack(pady=50)
+
+    def restart(self):
+        """
+        スタート画面に戻る
+        """
+        self.pomo_timer.rep.rep_now = 0
+        self.master.show_start_window()
+
 
 if __name__ == "__main__":
     pass
